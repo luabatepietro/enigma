@@ -1,5 +1,5 @@
 import numpy as np
-from enigma import para_one_hot, para_string, cifrar, de_cifrar, enigma, de_enigma
+from hello_world.enigma import para_one_hot, para_string, cifrar, de_cifrar, enigma, de_enigma
 
 def demo():
     print("Olá!! Tudo bem? Hoje vou te mostrar alguns sistemas de codificação e decodificação.")
