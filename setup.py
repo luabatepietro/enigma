@@ -10,13 +10,13 @@ setup(
     ],
     entry_points={
         "console_scripts": [
-            "enigma==hello_word.demo:main",  # Apontando para a função demo no arquivo demo.py
+            "enigma=hello_world.demo:demo",  # Apontando para a função demo no arquivo demo.py
         ],
     },
     author="Lucas Abatepietro",  # Seu nome
     author_email="luabatepietro@hotmail.com",  # Seu email
     description="Enigma",
-    long_description=open("README.md").read(),  # Descrição longa (usualmente do README)
+    long_description=open("README.md", encoding="utf-8").read(),  # Descrição longa com codificação correta
     long_description_content_type="text/markdown",
     url="https://github.com/luabatepietro/enigma.git",  # URL do seu repositório
     classifiers=[
