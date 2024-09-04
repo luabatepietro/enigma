@@ -10,7 +10,7 @@ setup(
     ],
     entry_points={
         "console_scripts": [
-            "enigma=hello_world.demo:demo",  # Apontando para a função demo no arquivo demo.py
+            "enigma=hello_world.enigma:main",  # Apontando para a função demo no arquivo demo.py
         ],
     },
     author="Lucas Abatepietro",  # Seu nome

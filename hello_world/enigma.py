@@ -5,11 +5,11 @@ def gerar_permutacoes(N: int) -> Tuple[np.ndarray, np.ndarray]:
     """
     Gera duas matrizes de permutação de tamanho N x N.
     """
-    P = np.eye(N)  # Matriz identidade
-    Q = np.eye(N) # Matriz identidade
+    P = np.eye(N)  
+    Q = np.eye(N) 
     
-    np.random.shuffle(P)  # Embaralha P
-    np.random.shuffle(Q)  # Embaralha Q
+    np.random.shuffle(P)  
+    np.random.shuffle(Q)  
     
     return P, Q
 
@@ -95,11 +95,13 @@ def decriptar(msg_enc: str, P: np.ndarray, Q: np.ndarray) -> str:
     
     return decriptada
 
-msg_original = input("Digite sua mensagem: ")
-P, Q = gerar_permutacoes(27)  
 
-msg_enc = encriptar(msg_original, P, Q)
-print("Mensagem encriptada:", msg_enc)
+if __name__ == "__main__":
+    msg_original = input("Digite sua mensagem: ")
+    P, Q = gerar_permutacoes(27)  
 
-msg_dec = decriptar(msg_enc, P, Q)
-print("Mensagem decriptada:", msg_dec)
+    msg_enc = encriptar(msg_original, P, Q)
+    print("Mensagem encriptada:", msg_enc)
+
+    msg_dec = decriptar(msg_enc, P, Q)
+    print("Mensagem decriptada:", msg_dec)
