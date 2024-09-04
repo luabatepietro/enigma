@@ -2,17 +2,18 @@ import numpy as np
 from typing import Tuple
 
 def gerar_permutacoes(N: int) -> Tuple[np.ndarray, np.ndarray]:
-
-    P = np.eye(N)  
-    Q = np.eye(N) 
+    """
+    Gera duas matrizes de permutação de tamanho N x N.
+    """
+    P = np.eye(N)  # Matriz identidade
+    Q = np.eye(N)  # Matriz identidade
     
-    np.random.shuffle(P)  
-    np.random.shuffle(Q)  
+    np.random.shuffle(P)  # Embaralha P
+    np.random.shuffle(Q)  # Embaralha Q
     
     return P, Q
 
 def one_hot(mensagem: str, alfabeto: str) -> list:
-
     N = len(alfabeto)
     matriz = []
     
@@ -26,7 +27,6 @@ def one_hot(mensagem: str, alfabeto: str) -> list:
     return matriz
 
 def encriptar(msg: str, P: np.ndarray, Q: np.ndarray) -> str:
-
     alfabeto = "ABCDEFGHIJKLMNOPQRSTUVWXYZ "
     msg = msg.upper()
     N = len(alfabeto)
@@ -60,7 +60,6 @@ def encriptar(msg: str, P: np.ndarray, Q: np.ndarray) -> str:
     return encriptada
 
 def decriptar(msg_enc: str, P: np.ndarray, Q: np.ndarray) -> str:
-
     alfabeto = "ABCDEFGHIJKLMNOPQRSTUVWXYZ "
     msg_enc = msg_enc.upper()
     N = len(alfabeto)
@@ -93,11 +92,15 @@ def decriptar(msg_enc: str, P: np.ndarray, Q: np.ndarray) -> str:
     
     return decriptada
 
-msg_original = input("Digite sua mensagem: ")
-P, Q = gerar_permutacoes(27)  
+def main():
+    msg_original = input("Digite sua mensagem: ")
+    P, Q = gerar_permutacoes(27)
 
-msg_enc = encriptar(msg_original, P, Q)
-print("Mensagem encriptada:", msg_enc)
+    msg_enc = encriptar(msg_original, P, Q)
+    print("Mensagem encriptada:", msg_enc)
 
-msg_dec = decriptar(msg_enc, P, Q)
-print("Mensagem decriptada:", msg_dec)
+    msg_dec = decriptar(msg_enc, P, Q)
+    print("Mensagem decriptada:", msg_dec)
+
+if __name__ == "__main__":
+    main()
