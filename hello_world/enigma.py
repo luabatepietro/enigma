@@ -1,77 +1,105 @@
 import numpy as np
+from typing import Tuple
 
-def para_one_hot(msg: str) -> np.array:
-    alfabeto = "abcdefghijklmnopqrstuvwxyz "
-    n = len(alfabeto)
-    T = len(msg)
-    M = np.zeros((n, T), dtype=int)
+def gerar_permutacoes(N: int) -> Tuple[np.ndarray, np.ndarray]:
+    """
+    Gera duas matrizes de permutação de tamanho N x N.
+    """
+    P = np.eye(N)  # Matriz identidade
+    Q = np.eye(N) # Matriz identidade
     
-    for j, char in enumerate(msg):
-        i = alfabeto.index(char)
-        M[i, j] = 1
+    np.random.shuffle(P)  # Embaralha P
+    np.random.shuffle(Q)  # Embaralha Q
     
-    return M
+    return P, Q
 
-def para_string(M: np.array) -> str:
-    alfabeto = "abcdefghijklmnopqrstuvwxyz "
-    msg = ''
-    for j in range(M.shape[1]):
-        i = np.argmax(M[:, j])
-        msg += alfabeto[i]
-    
-    return msg
+def one_hot(mensagem: str, alfabeto: str) -> list:
 
-def cifrar(msg: str, P: np.array) -> str:
-    alfabeto = "abcdefghijklmnopqrstuvwxyz "
-    n = len(alfabeto)
-    T = len(msg)
-    M = np.zeros((n, T), dtype=int)
+    N = len(alfabeto)
+    matriz = []
+    
+    for char in mensagem:
+        linha = [0] * N
+        if char in alfabeto:
+            idx = alfabeto.index(char)
+            linha[idx] = 1
+        matriz.append(linha)
+    
+    return matriz
 
-    for j, char in enumerate(msg):
-        i = alfabeto.index(char)
-        M[i, j] = 1
-    
-    M_permutada = P @ M
-    
-    msg_cifrada = ''
-    for j in range(M_permutada.shape[1]):
-        i = np.argmax(M_permutada[:, j])
-        msg_cifrada += alfabeto[i]
-    
-    return msg_cifrada
+def encriptar(msg: str, P: np.ndarray, Q: np.ndarray) -> str:
 
-def de_cifrar(msg: str, P: np.array) -> str:
-    alfabeto = "abcdefghijklmnopqrstuvwxyz "
-    n = len(alfabeto)
-    T = len(msg)
-    M_cifrada = np.zeros((n, T), dtype=int)
+    alfabeto = "ABCDEFGHIJKLMNOPQRSTUVWXYZ "
+    msg = msg.upper()
+    N = len(alfabeto)
     
-    for j, char in enumerate(msg):
-        i = alfabeto.index(char)
-        M_cifrada[i, j] = 1
+    hot = one_hot(msg, alfabeto)
     
-    M_original = P.T @ M_cifrada
+    codificada = []
+    for i in range(len(hot)):
+        linha = hot[i]
+        
+        perm_P = [0] * N
+        for j in range(N):
+            for k in range(N):
+                perm_P[j] += linha[k] * P[k][j]
+        
+        for _ in range(i + 1):
+            nova_linha = [0] * N
+            for j in range(N):
+                for k in range(N):
+                    nova_linha[j] += perm_P[k] * Q[k][j]
+            perm_P = nova_linha
+        
+        codificada.append(perm_P)
     
-    msg_original = ''
-    for j in range(M_original.shape[1]):
-        i = np.argmax(M_original[:, j])
-        msg_original += alfabeto[i]
+    encriptada = ""
+    for linha in codificada:
+        idx = linha.index(1) if 1 in linha else -1
+        if idx != -1:
+            encriptada += alfabeto[idx]
     
-    return msg_original
+    return encriptada
 
-def enigma(msg: str, P: np.array, E: np.array) -> str:
-    msg_cifrada_P = cifrar(msg, P)
-    msg_cifrada_E = cifrar(msg_cifrada_P, E)
-    
-    msg_final = cifrar(msg_cifrada_E, P)
-    
-    return msg_final
+def decriptar(msg_enc: str, P: np.ndarray, Q: np.ndarray) -> str:
 
-def de_enigma(msg: str, P: np.array, E: np.array) -> str:
-    msg_decifrada_P1 = de_cifrar(msg, P)
-    msg_decifrada_E = de_cifrar(msg_decifrada_P1, E)
+    alfabeto = "ABCDEFGHIJKLMNOPQRSTUVWXYZ "
+    msg_enc = msg_enc.upper()
+    N = len(alfabeto)
     
-    msg_original = de_cifrar(msg_decifrada_E, P)
+    hot = one_hot(msg_enc, alfabeto)
     
-    return msg_original
+    decodificada = []
+    for i in range(len(hot)):
+        linha = hot[i]
+        
+        for _ in range(i + 1):
+            nova_linha = [0] * N
+            for j in range(N):
+                for k in range(N):
+                    nova_linha[j] += linha[k] * Q[j][k]  
+            linha = nova_linha
+        
+        perm_P_inversa = [0] * N
+        for j in range(N):
+            for k in range(N):
+                perm_P_inversa[j] += linha[k] * P[j][k]  # P^T para desfazer P
+        
+        decodificada.append(perm_P_inversa)
+    
+    decriptada = ""
+    for linha in decodificada:
+        idx = linha.index(1) if 1 in linha else -1
+        if idx != -1:
+            decriptada += alfabeto[idx]
+    
+    return decriptada
 
+msg_original = input("Digite sua mensagem: ")
+P, Q = gerar_permutacoes(27)  
+
+msg_enc = encriptar(msg_original, P, Q)
+print("Mensagem encriptada:", msg_enc)
+
+msg_dec = decriptar(msg_enc, P, Q)
+print("Mensagem decriptada:", msg_dec)
