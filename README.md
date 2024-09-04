@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-=======
 # Sistema de Codificação e Decodificação de Mensagens
 
 Este projeto usa matrizes de permutação e álgebra linear para codificar e decodificar mensagens de texto. A mensagem é transformada em uma matriz "one-hot" e passa por operações matriciais para ser cifrada e depois decifrada.
